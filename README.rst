@@ -37,6 +37,6 @@ Include it in your class path.
 Resources
 ---------
 
-* `Bug Tracker <http://github.com/skitoo/raven-as3/issues`_
+* `Bug Tracker <http://github.com/skitoo/raven-as3/issues>`_
 * `Code <http://github.com/skitoo/raven-as3>`_   
    
