@@ -1,3 +1,11 @@
+/**
+ * This file is part of Raven AS3 client.
+ *
+ * (c) Alexis Couronne
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 package scopart.raven
 {
 	import com.adobe.net.URI;
@@ -23,6 +31,9 @@ package scopart.raven
 			parseDSN();
 		}
 		
+		/**
+		 * @private
+		 */
 		private function parseDSN() : void
 		{
 			_uri = _uriObject.scheme + '://' + _uriObject.authority;
@@ -47,26 +58,41 @@ package scopart.raven
 			_publicKey = _uriObject.username;
 		}
 		
+		/**
+		 * Sentry url path
+		 */
 		public function get uri() : String
 		{
 			return _uri;
 		}
 		
+		/**
+		 * The Sentry public key
+		 */
 		public function get publicKey() : String
 		{
 			return _publicKey;
 		}
 		
+		/**
+		 * The Sentry private key
+		 */
 		public function get privateKey() : String
 		{
 			return _privateKey;
 		}
 		
+		/**
+		 * The Sentry project id
+		 */
 		public function get projectID() : String
 		{
 			return _project;
 		}
 
+		/**
+		 * Sentry dsn
+		 */
 		public function get dsn() : String
 		{
 			return _dsn;

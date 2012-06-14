@@ -1,3 +1,11 @@
+/**
+ * This file is part of Raven AS3 client.
+ *
+ * (c) Alexis Couronne
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 package scopart.raven
 {
 	import flash.events.Event;
@@ -35,6 +43,9 @@ package scopart.raven
 			loader.load(request);
 		}
 		
+		/**
+		 * @private
+		 */
 		private function buildAuthHeader(signature : String, timestamp : Number) : String
 		{
 			var header : String = 'Sentry sentry_version=2.0,sentry_signature=';
@@ -48,12 +59,18 @@ package scopart.raven
 			return header;
 		}
 
+		/**
+		 * @private
+		 */
 		private function onLoadFail(event : IOErrorEvent) : void
 		{
 			var loader : URLLoader = URLLoader(event.target);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, onLoadFail);
 		}
 
+		/**
+		 * @private
+		 */
 		private function onLoadComplete(event : Event) : void
 		{
 			var loader : URLLoader = URLLoader(event.target);

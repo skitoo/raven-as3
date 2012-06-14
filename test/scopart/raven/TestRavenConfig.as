@@ -1,3 +1,11 @@
+/**
+ * This file is part of Raven AS3 client.
+ *
+ * (c) Alexis Couronne
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 package scopart.raven
 {
 	import org.flexunit.asserts.assertEquals;

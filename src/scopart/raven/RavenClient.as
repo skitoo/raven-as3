@@ -1,3 +1,12 @@
+/**
+ * This file is part of Raven AS3 client.
+ *
+ * (c) Alexis Couronne
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package scopart.raven
 {
 	import com.adobe.serialization.json.JSON;
@@ -32,6 +41,9 @@ package scopart.raven
 			_sender = new RavenMessageSender(_config);
 		}
 
+		/**
+		 * Log a message to sentry
+		 */
 		public function captureMessage(message : String, logger : String = 'root', level : int = ERROR, culprit : String = null) : String
 		{
 			var now : Date = new Date();
@@ -40,6 +52,9 @@ package scopart.raven
 			return _lastID;
 		}
 
+		/**
+		 * Log an exception to Sentry
+		 */
 		public function captureException(error : Error, message : String = null, logger : String = 'root', level : int = ERROR, culprit : String = null) : String
 		{
 			var now : Date = new Date();
@@ -48,6 +63,9 @@ package scopart.raven
 			return _lastID;
 		}
 
+		/**
+		 * @private
+		 */
 		private function buildMessage(message : String, timeStamp : String, logger : String, level : int, culprit : String, error : Error) : String
 		{
 			var json : String = buildJSON(message, timeStamp, logger, level, culprit, error);
@@ -56,6 +74,9 @@ package scopart.raven
 			return RavenBase64.encode(byteArray);
 		}
 
+		/**
+		 * @private
+		 */
 		private function buildJSON(message : String, timeStamp : String, logger : String, level : int, culprit : String, error : Error) : String
 		{
 			_lastID = RavenUtils.uuid4();
@@ -80,6 +101,9 @@ package scopart.raven
 			return JSON.encode(object);
 		}
 
+		/**
+		 * @private
+		 */
 		private function buildException(error : Error) : Object
 		{
 			var object : Object = new Object();
@@ -89,6 +113,9 @@ package scopart.raven
 			return object;
 		}
 
+		/**
+		 * @private
+		 */
 		private function buildStacktrace(error : Error) : Object
 		{
 			var result : Object = new Object();
@@ -96,6 +123,9 @@ package scopart.raven
 			return result;
 		}
 
+		/**
+		 * @private
+		 */
 		private function determineCulprit(error : Error) : String
 		{
 			return error.getStackTrace().split('\n')[0];
