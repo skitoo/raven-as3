@@ -9,7 +9,7 @@ Raven-java is a Flash/AS3 client for `Sentry <http://github.com/dcramer/sentry>`
     var client : RavenClient = new RavenClient('http://public:secret@example.com/1');
 
     // Capture a message
-    client->captureMessage('my log message');
+    client.captureMessage('my log message');
 
     // Capture an exception
     try
@@ -18,12 +18,12 @@ Raven-java is a Flash/AS3 client for `Sentry <http://github.com/dcramer/sentry>`
     }
     catch(e : Error)
     {
-      client->captureException(e);
+      client.captureException(e);
     }
     
 
 Installation
-============
+------------
 
 To install the source code:
 
@@ -35,7 +35,7 @@ Include it in your class path.
 
 
 Resources
-=========
+---------
 
 * `Bug Tracker <http://github.com/skitoo/raven-as3/issues`_
 * `Code <http://github.com/skitoo/raven-as3>`_   
