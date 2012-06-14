@@ -1,7 +1,7 @@
 Raven-AS3
 =========
 
-Raven-java is a Flash/AS3 client for `Sentry <http://github.com/dcramer/sentry>`_. 
+Raven-as3 is a Flash/AS3 client for `Sentry <http://github.com/dcramer/sentry>`_. 
 
 ::
 
