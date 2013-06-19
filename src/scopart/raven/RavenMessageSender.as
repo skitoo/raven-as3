@@ -14,6 +14,7 @@ package scopart.raven
 	import flash.net.URLRequest;
 	import flash.net.URLRequestHeader;
 	import flash.net.URLRequestMethod;
+	import flash.system.Security;
 
 	/**
 	 * @author Alexis Couronne
@@ -25,6 +26,8 @@ package scopart.raven
 		public function RavenMessageSender(config : RavenConfig)
 		{
 			_config = config;
+
+			Security.loadPolicyFile(_config.uri + 'api/' + _config.projectID + '/crossdomain.xml');
 		}
 
 		public function send(message : String, timestamp : Number) : void
@@ -35,7 +38,7 @@ package scopart.raven
 			loader.addEventListener(Event.COMPLETE, onLoadComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onLoadFail);
 
-			var request : URLRequest = new URLRequest(_config.uri + 'api/store/');
+			var request : URLRequest = new URLRequest(_config.uri + 'api/' + _config.projectID + '/store/');
 			request.method = URLRequestMethod.POST;
 			request.requestHeaders.push(new URLRequestHeader('X-Sentry-Auth', buildAuthHeader(signature, timestamp)));
 			request.requestHeaders.push(new URLRequestHeader('Content-Type', 'application/octet-stream'));
