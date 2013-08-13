@@ -10,7 +10,7 @@ package scopart.raven
 {
 	import com.adobe.crypto.HMAC;
 	import com.adobe.crypto.SHA1;
-
+	
 	import flash.utils.getQualifiedClassName;
 
 	/**
@@ -66,22 +66,24 @@ package scopart.raven
 			var result : Array = new Array();
 			var elements : Array = error.getStackTrace().split('\n');
 			elements.shift();
-			for (var i : int = 0 ; i < elements.length ; i++)
+			
+			var causedFrame : Object = new Object();
+			causedFrame['filename'] = 'Caused by ' + RavenUtils.getClassName(error) + '(' + error.message + ')';
+			causedFrame['lineno'] = -1;
+			result.push(causedFrame);
+			
+			for each(var element : String in elements)
 			{
-				if (i == 0)
-				{
-					var causedFrame : Object = new Object();
-					causedFrame['filename'] = 'Caused by ' + RavenUtils.getClassName(error) + '(' + error.message + ')';
-					causedFrame['lineno'] = -1;
-					result.push(causedFrame);
-				}
-				var element : String = elements[i];
-				var subelements : Array = element.substr(3, element.length - 4).split('[');
-				var fileAndLine : Array = String(subelements[1]).split(':');
 				var frame : Object = new Object();
-				frame['filename'] = fileAndLine[0];
-				frame['lineno'] = fileAndLine[1];
-				frame['function'] = subelements[0];
+				
+				var subelements		: Array		= element.substr(3, element.length - 4).split('[');
+				var fileAndLine		: String	= String(subelements[1]);
+				var separator		: int		= fileAndLine.lastIndexOf(":");
+				
+				frame['filename']	= fileAndLine.substr(0, separator);
+				frame['lineno']		= fileAndLine.substr(separator + 1);
+				frame['function']	= subelements[0];
+				
 				result.push(frame);
 			}
 			return result;
