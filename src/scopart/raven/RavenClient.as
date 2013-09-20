@@ -9,8 +9,8 @@
 
 package scopart.raven
 {
-	import com.adobe.serialization.json.JSON;
-
+	import com.adobe.serialization.json.JSONEncoder;
+	
 	import flash.utils.ByteArray;
 
 	/**
@@ -98,7 +98,10 @@ package scopart.raven
 			object['level'] = level;
 			object['logger'] = logger;
 			object['server_name'] = RavenUtils.getHostname();
-			return JSON.encode(object);
+			
+			var encoder : JSONEncoder = new JSONEncoder(object);
+			
+			return encoder.getString();
 		}
 
 		/**
