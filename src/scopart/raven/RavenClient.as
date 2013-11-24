@@ -56,7 +56,7 @@ package scopart.raven
 		{
 			var now : Date = new Date();
 			var messageBody : String = buildMessage(message, RavenUtils.formatTimestamp(now), logger, level, culprit, null);
-			_tags = { }; // reset the provided tags before send
+			_tags = { }; // reset the provided tags after send
 			_sender.send(messageBody, now.time);
 			return _lastID;
 		}
