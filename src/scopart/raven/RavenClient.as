@@ -21,6 +21,7 @@ package scopart.raven
 		private var _config : RavenConfig;
 		private var _sender : RavenMessageSender;
 		private var _lastID : String;
+		private var _tags:Object; // used for injecting tags before request is made
 		
 		public static const DEBUG : uint = 10;
 		public static const INFO : uint = 20;
@@ -41,6 +42,13 @@ package scopart.raven
 			_sender = new RavenMessageSender(_config);
 		}
 
+		/*
+		 * set tags for the next capture
+		 */
+		public function setTags(tags:Object=null) {
+			_tags = tags;
+		}
+		
 		/**
 		 * Log a message to sentry
 		 */
@@ -48,6 +56,7 @@ package scopart.raven
 		{
 			var now : Date = new Date();
 			var messageBody : String = buildMessage(message, RavenUtils.formatTimestamp(now), logger, level, culprit, null);
+			_tags = { }; // reset the provided tags after send
 			_sender.send(messageBody, now.time);
 			return _lastID;
 		}
@@ -59,6 +68,7 @@ package scopart.raven
 		{
 			var now : Date = new Date();
 			var messageBody : String = buildMessage(message || error.message, RavenUtils.formatTimestamp(now), logger, level, culprit, error);
+			_tags = { }; // reset the provided tags before send
 			_sender.send(messageBody, now.time);
 			return _lastID;
 		}
@@ -97,7 +107,9 @@ package scopart.raven
 			object['project'] = _config.projectID;
 			object['level'] = level;
 			object['logger'] = logger;
-			object['server_name'] = RavenUtils.getHostname();
+			object['tags'] = _tags;
+			// no use for this at the moment
+			//object['server_name'] = RavenUtils.getHostname();
 			
 			var encoder : JSONEncoder = new JSONEncoder(object);
 			
