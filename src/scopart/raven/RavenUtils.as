@@ -10,7 +10,8 @@ package scopart.raven
 {
 	import com.adobe.crypto.HMAC;
 	import com.adobe.crypto.SHA1;
-	
+
+	import flash.system.Capabilities;
 	import flash.utils.getQualifiedClassName;
 
 	/**
@@ -66,26 +67,34 @@ package scopart.raven
 			var result : Array = new Array();
 			var elements : Array = error.getStackTrace().split('\n');
 			elements.shift();
-			
-			var causedFrame : Object = new Object();
-			causedFrame['filename'] = 'Caused by ' + RavenUtils.getClassName(error) + '(' + error.message + ')';
-			causedFrame['lineno'] = -1;
-			result.push(causedFrame);
-			
+
+			if(Capabilities.isDebugger) {
+				var causedFrame : Object = new Object();
+				causedFrame['filename'] = 'Caused by ' + RavenUtils.getClassName(error) + '(' + error.message + ')';
+				causedFrame['lineno'] = -1;
+				result.push(causedFrame);
+			}
+
 			for each(var element : String in elements)
 			{
 				var frame : Object = new Object();
-				
-				var subelements		: Array		= element.substr(3, element.length - 4).split('[');
-				var fileAndLine		: String	= String(subelements[1]);
-				var separator		: int		= fileAndLine.lastIndexOf(":");
-				
-				frame['filename']	= fileAndLine.substr(0, separator);
-				frame['lineno']		= fileAndLine.substr(separator + 1);
+
+				var endOfMsg        : int       = element.length - (Capabilities.isDebugger ? 4 : 3);
+				var subelements		: Array		= element.substr(3, endOfMsg).split('[');
+
 				frame['function']	= subelements[0];
-				
+
+				if(subelements.length > 1) {
+					var fileAndLine		: String	= String(subelements[1]);
+					var separator		: int		= fileAndLine.lastIndexOf(":");
+
+					frame['filename']	= fileAndLine.substr(0, separator);
+					frame['lineno']		= fileAndLine.substr(separator + 1);
+				}
+
 				result.push(frame);
 			}
+
 			return result;
 		}
 
