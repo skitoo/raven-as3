@@ -162,7 +162,7 @@ package scopart.raven
 				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]);
 			
 			return decodeChars;
-	
+		}
 	}
 }
 	
