@@ -20,7 +20,7 @@ package scopart.raven
 	
 	public class RavenBase64
 	{
-		private static const _encodeChars:Vector.<int> = InitEncoreChar();
+		private static const _encodeChars:Vector.<int> = InitEncodeChar();
 		private static const _decodeChars:Vector.<int> = InitDecodeChar();
 		
 		public static function encode(data:ByteArray):String
@@ -52,7 +52,7 @@ package scopart.raven
 				out[int(outPos++)] = _encodeChars[int(c >>> 2)];
 				out[int(outPos++)] = _encodeChars[int((c & 0x03) << 4)];
 				out[int(outPos++)] = 61;
-				out[int(outPos++)] = 61;
+				out[int(outPos)] = 61;
 			}
 			else if (r == 2) //Need one "=" padding
 			{
@@ -61,7 +61,7 @@ package scopart.raven
 				out[int(outPos++)] = _encodeChars[int(c >>> 10)];
 				out[int(outPos++)] = _encodeChars[int(c >>> 4 & 0x3f)];
 				out[int(outPos++)] = _encodeChars[int((c & 0x0f) << 2)];
-				out[int(outPos++)] = 61;
+				out[int(outPos)] = 61;
 			}
 			
 			return out.readUTFBytes(out.length);
@@ -125,7 +125,7 @@ package scopart.raven
 			return byteString;
 		}
 		
-		public static function InitEncoreChar():Vector.<int>
+		public static function InitEncodeChar():Vector.<int>
 		{
 			var encodeChars:Vector.<int> = new Vector.<int>(64, true);
 			
@@ -143,23 +143,23 @@ package scopart.raven
 		public static function InitDecodeChar():Vector.<int>
 		{
 			
-			var decodeChars:Vector.<int> = new Vector.<int>([
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 
-				52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, 
-				-1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 
-				15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, 
-				-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-				41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]);
+			var decodeChars:Vector.<int> = new <int>[
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+				52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+				-1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+				15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+				-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+				41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
 			
 			return decodeChars;
 		}

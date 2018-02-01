@@ -23,11 +23,15 @@ package scopart.raven
 		private var _project : String;
 		private var _publicKey : String;
 		private var _privateKey : String;
+        private var _release:String;
+        private var _environment:String;
 		
-		public function RavenConfig(dsn : String)
+		public function RavenConfig(dsn : String, release : String, environment : String)
 		{
 			_dsn = dsn;
-			_uriObject = new URI(_dsn);
+            _release = release;
+            _environment = environment;
+            _uriObject = new URI(_dsn);
 			parseDSN();
 		}
 		
@@ -97,5 +101,21 @@ package scopart.raven
 		{
 			return _dsn;
 		}
-	}
+
+        /**
+		 * Project release
+         */
+        public function get release():String
+		{
+            return _release;
+        }
+
+        /**
+		 * Project environment
+         */
+        public function get environment():String
+		{
+            return _environment;
+        }
+    }
 }

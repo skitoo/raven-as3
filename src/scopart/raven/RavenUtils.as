@@ -8,11 +8,8 @@
  */
 package scopart.raven
 {
-	import com.adobe.crypto.HMAC;
-	import com.adobe.crypto.SHA1;
 	import com.adobe.utils.StringUtil;
 
-	import flash.system.Capabilities;
 	import flash.utils.getQualifiedClassName;
 
 	/**
@@ -26,37 +23,29 @@ package scopart.raven
 		public static function uuid4() : String
 		{
 			var result : String = '';
-			result += randInt(0, 0xffff).toString(16).substr(0, 4);
-			result += randInt(0, 0xffff).toString(16).substr(0, 4);
+			result += zeroPad(randInt(0, 0xffff));
+			result += zeroPad(randInt(0, 0xffff));
 
-			result += randInt(0, 0xffff).toString(16).substr(0, 4);
+			result += zeroPad(randInt(0, 0xffff));
 
-			result += (randInt(0, 0x0fff) | 0x4000).toString(16).substr(0, 4);
+			result += zeroPad((randInt(0, 0x0fff) | 0x4000));
 
-			result += (randInt(0, 0x3fff) | 0x8000).toString(16).substr(0, 4);
+			result += zeroPad((randInt(0, 0x3fff) | 0x8000));
 
-			result += randInt(0, 0xffff).toString(16).substr(0, 4);
-			result += randInt(0, 0xffff).toString(16).substr(0, 4);
-			result += randInt(0, 0xffff).toString(16).substr(0, 4);
+			result += zeroPad(randInt(0, 0xffff));
+			result += zeroPad(randInt(0, 0xffff));
+			result += zeroPad(randInt(0, 0xffff));
 
 			return result;
 		}
 
-		public static function getHostname() : String
-		{
-			return "test";
-		}
+        public static function zeroPad (number:Number):String
+        {
+            return ("0000" + number.toString(16)).substr(-4, 4);
+        }
 
 		/**
-		 * Generate message signature
-		 */
-		public static function getSignature(messageBody : String, timestamp : Number, secretKey : String) : String
-		{
-			return HMAC.hash(secretKey, timestamp + ' ' + messageBody, SHA1);
-		}
-
-		/**
-		 * Generate a randon int between min and max passed-in values.
+		 * Generate a random int between min and max passed-in values.
 		 */
 		public static function randInt(min : int, max : int) : int
 		{
@@ -73,7 +62,6 @@ package scopart.raven
 			if(causedClass) {
 				var causedFrame : Object = new Object();
 				causedFrame['filename'] = 'Caused by ' + causedClass + '(' + error.message + ')';
-				causedFrame['lineno'] = -1;
 				result.push(causedFrame);
 			}
 
@@ -85,20 +73,18 @@ package scopart.raven
 
 				frame['function']	= StringUtil.trim(subelements[0]).substr(3); // trim 'at ' from start
 
-				if(subelements.length > 1) {
+				if(subelements.length > 1)
+                {
 					var fileAndLine		: String	= String(subelements[1]);
 					var separator		: int		= fileAndLine.lastIndexOf(":");
 
 					frame['filename']	= fileAndLine.substr(0, separator);
 					frame['lineno']		= parseInt(fileAndLine.substr(separator + 1)); // also trims ']' from end
-				} else {
-					frame['filename'] = '(Unknown file)';
-					frame['lineno'] = -1;
 				}
 
 				result.push(frame);
 			}
-
+            result.reverse();
 			return result;
 		}
 

@@ -6,7 +6,7 @@ Raven-as3 is a Flash/AS3 client for `Sentry <http://github.com/dcramer/sentry>`_
 ::
 
     // Instantiate a new client with a compatible DSN
-    var client : RavenClient = new RavenClient('http://public:secret@example.com/1');
+    var client : RavenClient = new RavenClient('http://public:secret@example.com/1', '1.0', 'production');
 
     // Capture a message
     client.captureMessage('my log message');

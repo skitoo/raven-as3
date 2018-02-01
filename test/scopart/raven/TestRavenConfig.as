@@ -21,8 +21,8 @@ package scopart.raven
 		[Before]
 		public function setUp() : void
 		{
-			_configWithoutPort = new RavenConfig('http://public:secret@example.com/sentry/default');
-			_configWithPort = new RavenConfig('http://public:secret@example.com:8080/sentry/default');
+			_configWithoutPort = new RavenConfig('http://public:secret@example.com/sentry/default', "1.0", "production");
+			_configWithPort = new RavenConfig('http://public:secret@example.com:8080/sentry/default', "1.0", "production");
 		}
 		
 		[Test]
@@ -59,5 +59,19 @@ package scopart.raven
 			assertEquals('public', _configWithoutPort.publicKey);
 			assertEquals('public', _configWithPort.publicKey);
 		}
+
+        [Test]
+        public function testRelease() : void
+        {
+            assertEquals('1.0', _configWithoutPort.release);
+            assertEquals('1.0', _configWithPort.release);
+        }
+
+        [Test]
+        public function testEnvironment() : void
+        {
+            assertEquals('production', _configWithoutPort.environment);
+            assertEquals('production', _configWithPort.environment);
+        }
 	}
 }
