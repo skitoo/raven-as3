@@ -22,25 +22,25 @@ package scopart.raven
 	public class RavenMessageSender
 	{
 		private var _config : RavenConfig;
+        private var _errorCallback : Function;
 
-		public function RavenMessageSender(config : RavenConfig)
+		public function RavenMessageSender(config : RavenConfig, errorCallback : Function)
 		{
 			_config = config;
+            _errorCallback = errorCallback;
 
 			Security.loadPolicyFile(_config.uri + 'api/' + _config.projectID + '/crossdomain.xml');
 		}
 
 		public function send(message : String, timestamp : Number) : void
 		{
-			var signature : String = RavenUtils.getSignature(message, timestamp, _config.privateKey);
-			
 			var loader : URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, onLoadComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onLoadFail);
 
 			var request : URLRequest = new URLRequest(_config.uri + 'api/' + _config.projectID + '/store/');
 			request.method = URLRequestMethod.POST;
-			request.requestHeaders.push(new URLRequestHeader('X-Sentry-Auth', buildAuthHeader(signature, timestamp)));
+			request.requestHeaders.push(new URLRequestHeader('X-Sentry-Auth', buildAuthHeader(timestamp)));
 			request.requestHeaders.push(new URLRequestHeader('Content-Type', 'application/octet-stream'));
 			request.data = message;
 			loader.load(request);
@@ -49,16 +49,17 @@ package scopart.raven
 		/**
 		 * @private
 		 */
-		private function buildAuthHeader(signature : String, timestamp : Number) : String
+		private function buildAuthHeader(timestamp : Number) : String
 		{
-			var header : String = 'Sentry sentry_version=2.0,sentry_signature=';
-			header += signature;
-			header += ',sentry_timestamp=';
+			var header : String = 'Sentry sentry_version=7';
+			header += ', sentry_timestamp=';
 			header += timestamp;
-			header += ',sentry_key=';
+            header += ', sentry_client=';
+            header += RavenClient.NAME + "/" + RavenClient.VERSION;
+            header += ', sentry_key=';
 			header += _config.publicKey;
-			header += ',sentry_client=';
-			header += RavenClient.NAME;
+			if (_config.privateKey)
+				header += ', sentry_secret=' + _config.privateKey;
 			return header;
 		}
 
@@ -69,6 +70,8 @@ package scopart.raven
 		{
 			var loader : URLLoader = URLLoader(event.target);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, onLoadFail);
+            if(_errorCallback != null)
+                _errorCallback("Error reporting Sentry error : " + event.text + ' : ' + loader.data, event);
 		}
 
 		/**
